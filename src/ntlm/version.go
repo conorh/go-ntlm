@@ -1,4 +1,4 @@
-package messages
+package ntlm
 
 import (
 	"bytes"
@@ -6,6 +6,12 @@ import (
 	"fmt"
 )
 
+// See MS-MNLP - 2.2.2.10:
+// The VERSION structure contains Windows version information that SHOULD be
+// ignored. This structure is used for debugging purposes only and its value
+// does not affect NTLM message processing. It is present in the NEGOTIATE_MESSAGE, 
+// CHALLENGE_MESSAGE, and AUTHENTICATE_MESSAGE messages only if NTLMSSP_NEGOTIATE_VERSION 
+// is negotiated.<28>
 type VersionStruct struct {
 	ProductMajorVersion uint8
 	ProductMinorVersion uint8

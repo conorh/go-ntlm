@@ -1,5 +1,8 @@
 package ntlm
 
+// Cryptographic operations required for NTLM
+// Mostly as defined by MS-NLMP - 6 Appendix A: Cryptographic Operations Reference
+
 import (
 	desP "crypto/des"
 	hmacP "crypto/hmac"

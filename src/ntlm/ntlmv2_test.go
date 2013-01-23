@@ -3,7 +3,6 @@ package ntlm
 import (
 	"bytes"
 	"encoding/hex"
-	"ntlm/messages"
 	"strings"
 	"testing"
 	"time"
@@ -31,19 +30,19 @@ func TestNTOWFv2(t *testing.T) {
 
 func TestNTLMv2(t *testing.T) {
 	flags := uint32(0)
-	flags = messages.NTLMSSP_NEGOTIATE_KEY_EXCH.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_56.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_128.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_VERSION.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_TARGET_INFO.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY.Set(flags)
-	flags = messages.NTLMSSP_TARGET_TYPE_SERVER.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_ALWAYS_SIGN.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_NTLM.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_SEAL.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_SIGN.Set(flags)
-	flags = messages.NTLM_NEGOTIATE_OEM.Set(flags)
-	flags = messages.NTLMSSP_NEGOTIATE_UNICODE.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_KEY_EXCH.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_56.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_128.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_VERSION.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_TARGET_INFO.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY.Set(flags)
+	flags = NTLMSSP_TARGET_TYPE_SERVER.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_ALWAYS_SIGN.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_NTLM.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_SEAL.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_SIGN.Set(flags)
+	flags = NTLM_NEGOTIATE_OEM.Set(flags)
+	flags = NTLMSSP_NEGOTIATE_UNICODE.Set(flags)
 
 	//	n := new(V2Session)
 	//	n.SetUserInfo("User","Password","Domain")
@@ -61,7 +60,7 @@ func TestNTLMv2(t *testing.T) {
 	client.SetUserInfo("User", "Password", "Domain")
 
 	challengeMessageBytes, _ := hex.DecodeString("4e544c4d53535000020000000c000c003800000033828ae20123456789abcdef00000000000000002400240044000000060070170000000f53006500720076006500720002000c0044006f006d00610069006e0001000c0053006500720076006500720000000000")
-	challengeMessage, err := messages.ParseChallengeMessage(challengeMessageBytes)
+	challengeMessage, err := ParseChallengeMessage(challengeMessageBytes)
 	if err == nil {
 		challengeMessage.String()
 	} else {
@@ -96,7 +95,7 @@ func TestNTLMv2(t *testing.T) {
 		0000000000000000c5dad2544fc97990
 		94ce1ce90bc9d03e`))
 
-	authenticateMessage, err := messages.ParseAuthenticateMessage(authenticateMessageBytes, 2)
+	authenticateMessage, err := ParseAuthenticateMessage(authenticateMessageBytes, 2)
 	if err == nil {
 		authenticateMessage.String()
 	} else {

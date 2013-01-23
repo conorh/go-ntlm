@@ -3,7 +3,6 @@
 == Sample Usage as NTLM Client
 
 import "ntlm"
-import "ntlm/messages"
 
 session = ntlm.NewClientSession(ntlm.Version1, ntlm.ConnectionlessMode)
 session.SetUserInfo("someuser","somepassword","somedomain")
@@ -12,7 +11,7 @@ negotiate := session.GenerateNegotiateMessage()
 
 <send negotiate to server>
 
-challenge, err := messages.ParseChallengeMessage(challengeBytes)
+challenge, err := ntlm.ParseChallengeMessage(challengeBytes)
 session.ProcessChallengeMessage(challenge)
 
 authenticate := session.GenerateAuthenticateMessage()
@@ -30,7 +29,7 @@ challenge := session.GenerateChallengeMessage()
 
 <receive authentication bytes>
 
-auth, err := messages.ParseAuthentiateMessage(authenticateBytes)
+auth, err := ntlm.ParseAuthentiateMessage(authenticateBytes)
 session.ProcessAuthenticateMessage(auth)
 
 == Generating a message MAC

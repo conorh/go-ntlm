@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"fmt"
-	"ntlm/messages"
 )
 
 type NtlmsspMessageSignature struct {
@@ -46,7 +45,7 @@ func sign(negFlags uint32, handle *rc4P.Cipher, signingKey []byte, seqNum uint32
 }
 
 func mac(negFlags uint32, handle *rc4P.Cipher, signingKey []byte, seqNum uint32, message []byte) (result *NtlmsspMessageSignature) {
-	if messages.NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY.IsSet(negFlags) {
+	if NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY.IsSet(negFlags) {
 		result = macWithExtendedSessionSecurity(negFlags, handle, signingKey, seqNum, message)
 	} else {
 		result = macWithoutExtendedSessionSecurity(handle, seqNum, message)
@@ -103,7 +102,7 @@ func macWithExtendedSessionSecurity(negFlags uint32, handle *rc4P.Cipher, signin
 	seqNumBytes := make([]byte, 4)
 	binary.LittleEndian.PutUint32(seqNumBytes, seqNum)
 	sig.CheckSum = hmacMd5(signingKey, concat(seqNumBytes, message))[0:8]
-	if messages.NTLMSSP_NEGOTIATE_KEY_EXCH.IsSet(negFlags) {
+	if NTLMSSP_NEGOTIATE_KEY_EXCH.IsSet(negFlags) {
 		sig.CheckSum = rc4(handle, sig.CheckSum)
 	}
 	sig.SeqNum = seqNumBytes

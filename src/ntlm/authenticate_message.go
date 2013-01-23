@@ -1,4 +1,4 @@
-package messages
+package ntlm
 
 import (
 	"bytes"
@@ -8,7 +8,11 @@ import (
 	"fmt"
 )
 
-type Authenticate struct {
+// See MS-NLMP - 2.2.1.3 AUTHENTICATE_MESSAGE
+// The AUTHENTICATE_MESSAGE defines an NTLM authenticate message that is sent from the 
+// client to the server after the CHALLENGE_MESSAGE (section 2.2.1.2) is processed by
+// the client.
+type AuthenticateMessage struct {
 	// sig - 8 bytes
 	Signature []byte
 	// message type - 4 bytes
@@ -51,8 +55,8 @@ type Authenticate struct {
 	Payload []byte
 }
 
-func ParseAuthenticateMessage(body []byte, ntlmVersion int) (*Authenticate, error) {
-	am := new(Authenticate)
+func ParseAuthenticateMessage(body []byte, ntlmVersion int) (*AuthenticateMessage, error) {
+	am := new(AuthenticateMessage)
 
 	am.Signature = body[0:8]
 	if !bytes.Equal(am.Signature, []byte("NTLMSSP\x00")) {
@@ -149,7 +153,7 @@ func ParseAuthenticateMessage(body []byte, ntlmVersion int) (*Authenticate, erro
 	return am, nil
 }
 
-func (a *Authenticate) ClientChallenge() (response []byte) {
+func (a *AuthenticateMessage) ClientChallenge() (response []byte) {
 	if a.NtlmV2Response != nil {
 		response = a.NtlmV2Response.NtlmV2ClientChallenge.ChallengeFromClient
 	} else if a.NtlmV1Response != nil && NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY.IsSet(a.NegotiateFlags) {
@@ -159,7 +163,7 @@ func (a *Authenticate) ClientChallenge() (response []byte) {
 	return response
 }
 
-func (a *Authenticate) getLowestPayloadOffset() int {
+func (a *AuthenticateMessage) getLowestPayloadOffset() int {
 	payloadStructs := [...]*PayloadStruct{a.LmChallengeResponse, a.NtChallengeResponseFields, a.DomainName, a.UserName, a.Workstation, a.EncryptedRandomSessionKey}
 
 	// Find the lowest offset value
@@ -174,7 +178,7 @@ func (a *Authenticate) getLowestPayloadOffset() int {
 	return lowest
 }
 
-func (a *Authenticate) Bytes() []byte {
+func (a *AuthenticateMessage) Bytes() []byte {
 	payloadLen := int(a.LmChallengeResponse.Len + a.NtChallengeResponseFields.Len + a.DomainName.Len + a.UserName.Len + a.Workstation.Len + a.EncryptedRandomSessionKey.Len)
 	messageLen := 8 + 4 + 6*8 + 4 + 8 + 16
 	payloadOffset := uint32(messageLen)
@@ -235,7 +239,7 @@ func (a *Authenticate) Bytes() []byte {
 	return buffer.Bytes()
 }
 
-func (a *Authenticate) String() string {
+func (a *AuthenticateMessage) String() string {
 	var buffer bytes.Buffer
 
 	buffer.WriteString("Authenticate NTLM Message\n")

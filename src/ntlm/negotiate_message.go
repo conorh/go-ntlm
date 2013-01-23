@@ -1,6 +1,11 @@
-package messages
+package ntlm
 
-type Negotiate struct {
+// See MS-NLMP - 2.2.1.1 NEGOTIATE_MESSAGE
+// The NEGOTIATE_MESSAGE defines an NTLM Negotiate message that is sent from the
+// client to the server. This message allows the client to specify its supported
+// NTLM options to the server.
+
+type NegotiateMessage struct {
 	// All bytes of the message
 	Bytes []byte
 

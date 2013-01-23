@@ -1,4 +1,4 @@
-package messages
+package ntlm
 
 import (
 	"bytes"
@@ -9,7 +9,9 @@ import (
 
 type AvPairType uint16
 
-// MS-NLMP - 2.2.2.1 AV_PAIR
+// see MS-NLMP - 2.2.2.1 AV_PAIR
+// The AV_PAIR structure defines an attribute/value pair. Sequences of AV_PAIR structures are used
+// in the CHALLENGE_MESSAGE (section 2.2.1.2) and AUTHENTICATE_MESSAGE (section 2.2.1.3) messages.
 const (
 	// Indicates that this is the last AV_PAIR in the list. AvLen MUST be 0. This type of information MUST be present in the AV pair list.
 	MsvAvEOL AvPairType = iota
